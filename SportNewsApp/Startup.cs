@@ -8,7 +8,10 @@ namespace SportNewsApp
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using SportNewsApp.Data;
-
+    using SportNewsApp.Services.Articles;
+    using SportNewsApp.Services.Authors;
+    using SportNewsApp.Services.Categories;
+    using SportNewsApp.Services.Users;
 
     public class Startup
     {
@@ -35,6 +38,11 @@ namespace SportNewsApp
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            services.AddTransient<IAuthorsService, AuthorsService>();
+            services.AddTransient<IArticlesService, ArticlesService>();
+            services.AddTransient<ICategoriesService, CategoriesService>();
+            services.AddTransient<IUsersService, UsersService>();
         }
 
 

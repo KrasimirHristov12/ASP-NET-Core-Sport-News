@@ -18,6 +18,8 @@
         [Required]
         [MaxLength(ArticleContentMaxLength)]
         public string Content { get; set; }
+        [Required]
+        public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
         public int AuthorId { get; set; }
         public Author Author { get; set; }

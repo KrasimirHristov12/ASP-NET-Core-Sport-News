@@ -238,6 +238,10 @@ namespace SportNewsApp.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -249,7 +253,7 @@ namespace SportNewsApp.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Article");
+                    b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("SportNewsApp.Data.Models.Author", b =>
