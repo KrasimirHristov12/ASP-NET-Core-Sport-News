@@ -12,6 +12,7 @@ namespace SportNewsApp
     using SportNewsApp.Services.Authors;
     using SportNewsApp.Services.Categories;
     using SportNewsApp.Services.Users;
+    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -36,6 +37,7 @@ namespace SportNewsApp
                 options.Password.RequireNonAlphanumeric = false;
 
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
@@ -43,6 +45,7 @@ namespace SportNewsApp
             services.AddTransient<IArticlesService, ArticlesService>();
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IUsersService, UsersService>();
+
         }
 
 
@@ -74,6 +77,37 @@ namespace SportNewsApp
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+
+            using var serviceScope = app.ApplicationServices.CreateScope();
+            var services = serviceScope.ServiceProvider;
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task.Run(async () =>
+            {
+                var role = new IdentityRole
+                {
+                    Name = "Author"
+                };
+                var doesRoleExist = await roleManager.RoleExistsAsync(role.Name);
+                if (!doesRoleExist)
+                {
+                    await roleManager.CreateAsync(role);
+                }
+            }).GetAwaiter().GetResult();
+
+            Task.Run(async () =>
+            {
+                var role = new IdentityRole
+                {
+                    Name = "User"
+                };
+                var doesRoleExist = await roleManager.RoleExistsAsync(role.Name);
+                if (!doesRoleExist)
+                {
+                    await roleManager.CreateAsync(role);
+                }
+            }).GetAwaiter().GetResult();
         }
     }
 }
