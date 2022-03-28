@@ -25,6 +25,20 @@
             this.authorsService = authorsService;
             this.usersService = usersService;
         }
+        public ArticleViewModel GetArticleViewModel(string id)
+        {
+            return data.Articles.Where(a => a.Id == id)
+                .Select(a => new ArticleViewModel
+                {
+                    Title = a.Title,
+                    Content = a.Content,
+                    CategoryName = a.Category.Name,
+                    ImageUrl = a.ImageUrl,
+                    CreatedOn = a.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                    AuthorName = a.Author.Username
+                })
+                .FirstOrDefault();
+        }
         public AddArticleInputModel GetArticle(string id)
         {
             return data.Articles.Where(a => a.Id == id)
@@ -166,5 +180,7 @@
                 .FirstOrDefault();
              
         }
+
+
     }
 }

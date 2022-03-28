@@ -25,6 +25,17 @@
             this.authorsService = authorsService;
             this.usersService = usersService;
         }
+
+        public IActionResult Index(string id)
+        {
+            var article = this.articlesService.GetArticleViewModel(id);
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return View(article);
+        }
         public IActionResult All()
         {
             var allArticles = articlesService.GetAll();
