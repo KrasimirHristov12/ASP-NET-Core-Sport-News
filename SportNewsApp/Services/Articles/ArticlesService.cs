@@ -1,5 +1,6 @@
 ﻿namespace SportNewsApp.Services.Articles
 {
+    using Microsoft.EntityFrameworkCore;
     using SportNewsApp.Data;
     using SportNewsApp.Data.Models;
     using SportNewsApp.Models.Articles;
@@ -23,6 +24,19 @@
             this.categoriesService = categoriesService;
             this.authorsService = authorsService;
             this.usersService = usersService;
+        }
+        public AddArticleInputModel GetArticle(string id)
+        {
+            return data.Articles.Where(a => a.Id == id)
+                .Select(a => new AddArticleInputModel
+                {
+                    Title = a.Title,
+                    Content = a.Content,
+                    Category = a.Category.Name,
+                    ImageUrl = a.ImageUrl,
+                    Categories = this.categoriesService.GetAll()
+                })
+                .FirstOrDefault();
         }
         public string AddArticle(AddArticleInputModel article, int authorId)
         {
@@ -94,6 +108,63 @@
             
 
 
+        }
+
+        public int EditArticle(AddArticleInputModel article, string articleId, string userId)
+        {
+            var articleData = this.data.Articles.Include(a => a.Category).FirstOrDefault(a => a.Id == articleId);
+            int countEditedEntries = 0;
+            if (articleData == null)
+            {
+                return -1;
+            }
+            int currentAuthorId = this.authorsService.GetAuthorId(userId);
+            if (!CheckIfArticleBelongsToAuthor(currentAuthorId,articleData.AuthorId))
+            {
+                return -2;
+            }
+            if (articleData.Title != article.Title)
+            {
+                articleData.Title = article.Title;
+                countEditedEntries++;
+            }
+            if (articleData.Content != article.Content)
+            {
+                articleData.Content = article.Content;
+                countEditedEntries++;
+            }
+            if (articleData.ImageUrl != article.ImageUrl)
+            {
+                articleData.ImageUrl = article.ImageUrl;
+                countEditedEntries++;
+            }
+            if (articleData.Category.Name != article.Category)
+            {
+                if (!this.categoriesService.ExistsCategoryByName(article.Category))
+                {
+                    return -1;
+                }
+               int categoryId = this.categoriesService.GetCategoryIdByName(article.Category);
+               articleData.CategoryId = categoryId;
+               countEditedEntries++;
+
+            }
+            
+            this.data.SaveChanges();
+            return countEditedEntries;
+            
+        }
+
+        public bool CheckIfArticleBelongsToAuthor(int currentAuthorId, int actualAuthorId)
+        {
+            return currentAuthorId == actualAuthorId;
+        }
+        public int GetAuthorId(string id)
+        {
+            return data.Articles.Where(a => a.Id == id)
+                .Select(a => a.AuthorId)
+                .FirstOrDefault();
+             
         }
     }
 }

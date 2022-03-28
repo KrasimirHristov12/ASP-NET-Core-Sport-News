@@ -7,6 +7,7 @@
     using static SportNewsApp.Data.DataConstants;
     public class AddArticleInputModel
     {
+               
         [Display(Name = "Name")]
         [Required]
         [StringLength(ArticleTitleMaxLength, MinimumLength = ArticleTitleMinLength)]

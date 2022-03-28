@@ -81,6 +81,41 @@
             return RedirectToAction(nameof(ArticlesController.Yours));
         }
 
+        [Authorize(Roles = "Author")]
+        public IActionResult Edit(string id)
+        {
+            var myArticle = articlesService.GetArticle(id);
+            var currentAuthorId = this.authorsService.GetAuthorId(this.usersService.GetUserId(User));
+            var articleAuthorId = this.articlesService.GetAuthorId(id);
+            if (myArticle == null)
+            {
+                return NotFound();
+            }
+            if (!this.articlesService.CheckIfArticleBelongsToAuthor(currentAuthorId,articleAuthorId))
+            {
+                return Unauthorized();
+            }
+            return View(myArticle);
+        }
+        [Authorize(Roles = "Author")]
+        [HttpPost]
+        public IActionResult Edit(string id,AddArticleInputModel article)
+        {
+            string userId = this.usersService.GetUserId(User);
+            int authorId = this.authorsService.GetAuthorId(userId);
+            int result = this.articlesService.EditArticle(article, id, this.usersService.GetUserId(User));
+            if (result == -1)
+            {
+                return NotFound();
+            }
+            else if (result == -2)
+            {
+                return Unauthorized();
+            }
+            return RedirectToAction(nameof(ArticlesController.Yours));
+        }
+
+
     }
 
 }
