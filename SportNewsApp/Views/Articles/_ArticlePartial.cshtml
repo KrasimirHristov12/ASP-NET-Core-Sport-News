@@ -1,0 +1,18 @@
+﻿@model AllArticlesViewModel
+@{
+    var action = Context.Request.RouteValues["action"].ToString();
+}
+
+<div class="card col-md-4">
+    <img class="card-img-top" src="@Model.ImageUrl" alt="@Model.Title">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Title</h5>
+        <a asp-controller="Articles" asp-action="All" asp-route-id="@Model.Id" class="btn btn-primary">Go somewhere</a>
+        @if (action == "Yours")
+        {
+            <a asp-controller="Articles" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">Edit</a>
+            <a asp-controller="Articles" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        }
+
+    </div>
+</div>

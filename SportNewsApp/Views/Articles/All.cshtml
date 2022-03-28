@@ -1,0 +1,19 @@
+﻿@model ICollection<AllArticlesViewModel>
+
+@{
+    ViewData["Title"] = "All articles";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <div class="row">
+        @foreach (var article in Model.Take(3))
+        {
+            <partial name="_ArticlePartial" for="@article" />
+
+
+
+        }
+    </div>
+</div>

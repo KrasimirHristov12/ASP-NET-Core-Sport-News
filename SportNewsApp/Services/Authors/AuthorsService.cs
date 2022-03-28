@@ -31,17 +31,12 @@
             return this.data.Authors.Any(a => a.UserId == userId);
         }
 
+
         public int GetAuthorId(string userId)
         {
-            var author = this.data.Authors.FirstOrDefault(a => a.UserId == userId);
-            if (author == null)
-            {
-                return 0;
-            }
-            return author.Id;
-
+            return data.Authors.Where(a => a.UserId == userId)
+                .Select(a => a.Id)
+                .FirstOrDefault();
         }
-
-
     }
 }

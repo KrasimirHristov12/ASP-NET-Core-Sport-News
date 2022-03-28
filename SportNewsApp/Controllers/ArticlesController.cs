@@ -25,7 +25,13 @@
             this.authorsService = authorsService;
             this.usersService = usersService;
         }
-        [Authorize]
+        public IActionResult All()
+        {
+            var allArticles = articlesService.GetAll();
+            return View(allArticles);
+        }
+
+        [Authorize(Roles = "Author")]
         public IActionResult Add()
         {
             var addModel = new AddArticleInputModel
@@ -35,7 +41,7 @@
             return View(addModel);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Author")]
         [HttpPost]
         public IActionResult Add(AddArticleInputModel article)
         {
@@ -55,11 +61,24 @@
                 return BadRequest();
             }
             articlesService.AddArticle(article, authorId);
-            return Redirect("/");
-
+            return RedirectToAction("All");
             
-
-
+       }
+        [Authorize(Roles = "Author")]
+        public IActionResult Yours()
+        {
+            var articles = articlesService.GetYours(this.usersService.GetUserId(User));
+            return View(articles);
+        }
+        [Authorize(Roles = "Author")]
+        public IActionResult Delete(string id)
+        {
+            bool result = articlesService.DeleteArticle(id, this.usersService.GetUserId(User));
+            if (!result)
+            {
+                return Unauthorized();
+            }
+            return RedirectToAction(nameof(ArticlesController.Yours));
         }
 
     }

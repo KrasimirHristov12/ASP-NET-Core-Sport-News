@@ -1,0 +1,23 @@
+﻿@model ICollection<AllArticlesViewModel>
+@{ 
+    ViewData["Title"] = "Your articles";
+}
+<h2>@ViewData["Title"]</h2>
+@if (Model.Count == 0)
+{
+    <h5>You do not have any articles. If you want to create your first article click <a asp-controller="Articles" asp-action="Add">here</a></h5>
+}
+else
+{
+<div class="container">
+    <div class="row">
+        @foreach (var article in Model.Take(3))
+        {
+            <partial name="_ArticlePartial" for="@article" />
+
+
+
+        }
+    </div>
+</div>
+ }

@@ -5,11 +5,16 @@
     public class UsersService : IUsersService
     {
         public string GetUserId(ClaimsPrincipal user)
-            => user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            => user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
         public string GetUsername(ClaimsPrincipal user)
         {
             return user.Identity.Name;
+        }
+
+        public bool IfUserExists(string userId)
+        {
+            return userId != null;
         }
     }
 }

@@ -6,5 +6,6 @@
     {
         string GetUserId(ClaimsPrincipal user);
         string GetUsername(ClaimsPrincipal user);
+        bool IfUserExists(string userId);
     }
 }
