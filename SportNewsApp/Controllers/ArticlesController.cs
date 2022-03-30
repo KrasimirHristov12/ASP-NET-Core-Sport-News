@@ -89,7 +89,7 @@
             {
                 return Unauthorized();
             }
-            return RedirectToAction(nameof(ArticlesController.Yours));
+            return RedirectToAction(nameof(Yours));
         }
 
         [Authorize(Roles = "Author")]
@@ -123,7 +123,7 @@
             {
                 return Unauthorized();
             }
-            return RedirectToAction(nameof(ArticlesController.Yours));
+            return RedirectToAction(nameof(Yours));
         }
 
 

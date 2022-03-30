@@ -1,0 +1,57 @@
+﻿<form>
+    <select class="form-control" id="leagueDropdown">
+        <option value="172" selected>Parva liga</option>
+        <option value="39">English Premier League</option>
+    </select>
+</form>
+<div id="ranking-leagues">
+
+
+</div>
+
+
+
+<script>
+    let rankingContainer = document.querySelector("div#ranking-leagues");
+
+    let leagueDropdown = document.getElementById("leagueDropdown");
+    leagueDropdown.addEventListener("change", function (e) {
+        rankingContainer.innerHTML = "";
+        let leagueValue = e.target.value;
+        fetch(`https://v3.football.api-sports.io/standings?league=${leagueValue}&season=2021`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "v3.football.api-sports.io",
+                "x-rapidapi-key": "f56f03d92f3514a249a86652a12b9236"
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const leagueRanking = Array.from(data.response[0].league.standings)
+                leagueRanking.forEach(x => {
+                    for (var i = 0; i < x.length; i++) {
+                        console.log(x[i]);
+                        let teamDiv = document.createElement("div");
+                        teamDiv.classList.add("team", "border", "border-secondary");
+                        let teamLogo = document.createElement("img");
+                        teamLogo.style.width = "50px";
+                        teamLogo.setAttribute("src", x[i].team.logo);
+                        teamDiv.appendChild(teamLogo);
+                        teamDiv.innerHTML += `${i + 1}.${x[i].team.name} - ${x[i].points}`;
+
+                            
+                        rankingContainer.appendChild(teamDiv);
+
+                    }
+                })
+
+            });
+    });
+
+
+
+
+
+
+</script>

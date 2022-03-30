@@ -6,14 +6,21 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div class="container">
-    <div class="row">
-        @foreach (var article in Model.Take(3))
-        {
-            <partial name="_ArticlePartial" for="@article" />
+<div class="container d-flex">
+    <div class="col-md-4">
+        Standings:
+        <partial name="_StandingsPartial" />
+    </div>
+    <div class="container">
+        <div class="row">
+
+            @foreach (var article in Model)
+            {
+                <partial name="_ArticlePartial" for="@article" />
 
 
 
-        }
+            }
+        </div>
     </div>
 </div>
