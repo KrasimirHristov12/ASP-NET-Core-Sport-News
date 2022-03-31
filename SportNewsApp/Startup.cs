@@ -8,6 +8,7 @@ namespace SportNewsApp
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using SportNewsApp.Data;
+    using SportNewsApp.Middlewares;
     using SportNewsApp.Services.Articles;
     using SportNewsApp.Services.Authors;
     using SportNewsApp.Services.Categories;
@@ -69,45 +70,26 @@ namespace SportNewsApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCreateAppRolesMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name:"AdminRoute",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                    );
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 
-
-            using var serviceScope = app.ApplicationServices.CreateScope();
-            var services = serviceScope.ServiceProvider;
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-            Task.Run(async () =>
-            {
-                var role = new IdentityRole
-                {
-                    Name = "Author"
-                };
-                var doesRoleExist = await roleManager.RoleExistsAsync(role.Name);
-                if (!doesRoleExist)
-                {
-                    await roleManager.CreateAsync(role);
-                }
-            }).GetAwaiter().GetResult();
-
-            Task.Run(async () =>
-            {
-                var role = new IdentityRole
-                {
-                    Name = "User"
-                };
-                var doesRoleExist = await roleManager.RoleExistsAsync(role.Name);
-                if (!doesRoleExist)
-                {
-                    await roleManager.CreateAsync(role);
-                }
-            }).GetAwaiter().GetResult();
         }
+
+
+
+
+
     }
 }
+

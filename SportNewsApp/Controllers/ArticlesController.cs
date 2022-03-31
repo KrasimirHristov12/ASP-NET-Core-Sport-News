@@ -42,7 +42,7 @@
             return View(allArticles);
         }
 
-        [Authorize(Roles = "Author")]
+        [Authorize(Roles = "Author,Admin" )]
         public IActionResult Add()
         {
             var addModel = new AddArticleInputModel

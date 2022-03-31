@@ -34,5 +34,16 @@
             }
             return category.Id;
         }
+
+        public int CreateCategory(string name)
+        {
+            var category = new Category()
+            {
+                Name = name
+            };
+            this.data.Categories.Add(category);
+            this.data.SaveChanges();
+            return category.Id;
+        }
     }
 }

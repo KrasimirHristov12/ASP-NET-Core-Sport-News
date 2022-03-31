@@ -6,8 +6,10 @@
 
     public interface ICategoriesService
     {
-        public ICollection<string> GetAll();
-        public bool ExistsCategoryByName(string name);
-        public int GetCategoryIdByName(string name);
+         ICollection<string> GetAll();
+         bool ExistsCategoryByName(string name);
+         int GetCategoryIdByName(string name);
+
+        int CreateCategory(string name);
     }
 }

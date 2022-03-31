@@ -1,0 +1,10 @@
+﻿@model AddCategoryInputModel
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input class="form-control" asp-for="Name" placeholder="Here you should enter the name of the new category">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create a new category</button>
+</form>
