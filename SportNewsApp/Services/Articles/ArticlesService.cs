@@ -75,16 +75,26 @@
 
         public ICollection<AllArticlesViewModel> GetAll()
         {
-            return data.Articles.Select
-                (
-                    a => new AllArticlesViewModel
-                    {
+            return data.Articles
+                .Select(a => new AllArticlesViewModel
+                {
                         Id = a.Id,
                         ImageUrl = a.ImageUrl,
                         Title = a.Title
-                    }
-                )
+                })
                 .ToList();
+        }
+
+        public ICollection<AllArticlesViewModel> GetAllByCategory(string categoryName)
+        {
+            return data.Articles.Where(a => a.Category.Name.ToLower() == categoryName)
+                .Select(a => new AllArticlesViewModel
+                 {
+                     Id = a.Id,
+                     ImageUrl = a.ImageUrl,
+                     Title = a.Title
+                 })
+            .ToList();
         }
 
         public ICollection<AllArticlesViewModel> GetYours(string userId)

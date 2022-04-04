@@ -1,0 +1,76 @@
+﻿<form>
+
+
+    <span>Standing</span>
+    <select class="form-control" id="ranking-dropdown">
+        <option value="0">Select a league</option>
+        <option value="172">Parva liga</option>
+        <option value="39">English Premier League</option>
+    </select>
+    <div id="ranking-container"></div>
+    <script>
+        let dropdownLeague = document.getElementById("ranking-dropdown");
+        let rankingContainer = document.getElementById("ranking-container");
+        dropdownLeague.addEventListener("change", function (e) {
+            rankingContainer.innerHTML = "";
+
+            let leagueValue = e.target.value;
+            if (leagueValue != "0") {
+
+                getInfo(`https://v3.football.api-sports.io/standings?league=${leagueValue}&season=2021`, "v3.football.api-sports.io", "f56f03d92f3514a249a86652a12b9236").then(data => {
+
+                    let ranking = Array.from(data.response[0].league.standings[0]);
+                    for (var i = 0; i < ranking.length; i++)
+                    {
+                        var teamSpan = document.createElement("span");
+                        let teamName = ranking[i].team.name;
+                        teamSpan.innerText = teamName;
+                        teamSpan.classList.add("team-name");
+                        let teamLogoUrl = ranking[i].team.logo;
+                        let teamDiv = document.createElement("div");
+                        teamDiv.classList.add("d-flex", "team-container");
+                        let teamNameLogoContainer = document.createElement("div");
+                        let teamPoints = document.createElement("span");
+                        teamPoints.innerText = ranking[i].points;
+                        teamNameLogoContainer.classList.add("team-name-logo");
+                        let logoImg = document.createElement("img");
+                        logoImg.classList.add("team-logo")
+                        logoImg.src = teamLogoUrl;
+                        teamNameLogoContainer.appendChild(logoImg);
+                        teamNameLogoContainer.appendChild(teamSpan)
+                        teamDiv.appendChild(teamNameLogoContainer);
+                        teamDiv.appendChild(teamPoints);
+                        rankingContainer.appendChild(teamDiv);
+
+
+                    }
+                })
+            }
+        });
+
+
+    </script>
+
+
+</form>
+<div id="ranking-leagues">
+
+
+</div>
+
+
+
+<script>
+    async function getInfo(fetchUrl, apiHost, apiKey) {
+        let response = await fetch(fetchUrl, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": apiHost,
+                "x-rapidapi-key": apiKey
+            }
+        });
+        let info = await response.json();
+        return info
+    }
+
+</script>

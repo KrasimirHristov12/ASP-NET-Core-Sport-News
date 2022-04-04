@@ -7,6 +7,7 @@
     using SportNewsApp.Services.Authors;
     using SportNewsApp.Services.Categories;
     using SportNewsApp.Services.Users;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
 
@@ -36,13 +37,28 @@
 
             return View(article);
         }
-        public IActionResult All()
+        public IActionResult All(string category)
         {
-            var allArticles = articlesService.GetAll();
-            return View(allArticles);
+            ICollection<AllArticlesViewModel> allArticles = null;
+           
+            if (category == null)
+            {
+                allArticles = articlesService.GetAll();
+            }
+            else
+            {
+                allArticles = articlesService.GetAllByCategory(category);
+            }
+            var articles = new ArticlePageViewModel()
+            {
+                Category = category != null ? category.ToLower() : null,
+                AllCategories = this.categoriesService.GetAll().Select(c => c.ToLower()).ToList(),
+                Articles = allArticles
+            };
+            return View(articles);
         }
 
-        [Authorize(Roles = "Author,Admin" )]
+        [Authorize(Roles = "Author,Admin")]
         public IActionResult Add()
         {
             var addModel = new AddArticleInputModel

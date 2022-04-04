@@ -1,0 +1,33 @@
+﻿@using System.Globalization 
+@model FixturesViewModel
+@{
+    var finished = new List<string>();
+    var notStarted = new List<string>();
+}
+<h1>Fixtures - @Model.LeagueName</h1>
+@foreach (var team in Model.Response)
+{
+    if (team.Fixture.Status.Short == "FT")
+    {
+        finished.Add($"{team.Teams.Home.Name} - {team.Teams.Away.Name} ({team.Goals.Home}-{team.Goals.Away})");
+    }
+    else if (team.Fixture.Status.Short == "NS")
+    {
+        notStarted.Add($"{team.Teams.Home.Name} - {team.Teams.Away.Name} - {team.Fixture.Date.ToString("f",CultureInfo.CurrentCulture)}");
+    }
+}
+<h3>Finished matches</h3>
+<ul>
+    @foreach (var match in finished)
+    {
+        <li>@match</li>
+    }
+</ul>
+<h3>Not started yet</h3>
+<ul>
+    @foreach (var match in notStarted)
+    {
+        <li>@match</li>
+    }
+</ul>
+

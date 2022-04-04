@@ -1,20 +1,31 @@
-﻿@model ICollection<AllArticlesViewModel>
+﻿@model ArticlePageViewModel
 
 @{
-    ViewData["Title"] = "All articles";
+    ViewData["Title"] = Model.Category == null ? "All articles" : $"{Model.Category} articles";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <div class="container d-flex">
-    <div class="col-md-4">
-        Standings:
-        <partial name="_StandingsPartial" />
-    </div>
+    @if (Model.Category != null)
+    {
+        @if (Model.Category == "football")
+        {
+            <div class="col-md-4">
+                <partial name="_FootballStandingsPartial" />
+            </div>
+        }
+        else if (Model.Category == "tennis")
+        {
+
+        }
+    }
+
+
     <div class="container">
         <div class="row">
 
-            @foreach (var article in Model)
+            @foreach (var article in Model.Articles)
             {
                 <partial name="_ArticlePartial" for="@article" />
 
