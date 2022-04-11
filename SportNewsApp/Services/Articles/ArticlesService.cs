@@ -191,6 +191,15 @@
              
         }
 
-
+        public ICollection<IndexArticlesViewModel> GetMostRecentArticles(int count)
+        {
+            return this.data.Articles.Take(count).Select(a => new IndexArticlesViewModel
+            {
+                Id = a.Id,
+                Title = a.Title,
+                ImageUrl = a.ImageUrl
+            })
+                .ToList();
+        }
     }
 }

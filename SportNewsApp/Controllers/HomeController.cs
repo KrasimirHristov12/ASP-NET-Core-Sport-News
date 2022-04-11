@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SportNewsApp.Models;
+using SportNewsApp.Services.Articles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,15 +13,18 @@ namespace SportNewsApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IArticlesService articles;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IArticlesService articles)
         {
             _logger = logger;
+            this.articles = articles;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var latestArticles = this.articles.GetMostRecentArticles(5);
+            return View(latestArticles);
         }
 
         public IActionResult Privacy()

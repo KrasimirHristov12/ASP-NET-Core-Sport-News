@@ -6,5 +6,6 @@
     public interface IFixturesService
     {
         Task<FixturesViewModel> GetAll(League league, int round);
+        Task<int> GetCurrentRound(League league);
     }
 }

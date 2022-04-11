@@ -4,7 +4,7 @@
     var finished = new List<string>();
     var notStarted = new List<string>();
 }
-<h1>Fixtures - @Model.LeagueName</h1>
+<h1>Fixtures - @Model.LeagueName - Round @ViewData["round"]</h1>
 @foreach (var team in Model.Response)
 {
     if (team.Fixture.Status.Short == "FT")

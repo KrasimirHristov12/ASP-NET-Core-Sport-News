@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Mvc;
     using SportNewsApp.Services.Fixtures;
     using Enums.Fixtures;
+    using System;
 
     public class FixturesController : Controller
     {
@@ -12,9 +13,18 @@
         {
             this.fixturesService = fixturesService;
         }
-        public IActionResult Index(int? league)
+        public IActionResult Index(int league)
         {
-            var fixture = this.fixturesService.GetAll(League.PremierLeague, 30).GetAwaiter().GetResult();
+            var getCurrentRound = this.fixturesService.GetCurrentRound((League)league).GetAwaiter().GetResult();
+
+
+            var leagueEnum = (League)league;
+            var fixture = this.fixturesService.GetAll(leagueEnum, getCurrentRound).GetAwaiter().GetResult();
+
+            ViewData["round"] = getCurrentRound;
+
+
+
             return View(fixture);
         }
     }

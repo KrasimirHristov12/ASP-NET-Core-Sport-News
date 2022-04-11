@@ -3,6 +3,7 @@
     public enum League
     {
         PremierLeague = 39,
-        Parvaliga = 172
+        Parvaliga = 172,
+        LigueOne = 61
     }
 }
