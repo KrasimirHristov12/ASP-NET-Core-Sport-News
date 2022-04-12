@@ -1,0 +1,5 @@
+﻿@model string[]
+@foreach (var path in Model)
+{
+    <video src="@path" width="320" height="240" controls></video>
+}

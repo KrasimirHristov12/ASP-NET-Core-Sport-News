@@ -21,18 +21,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="All">All Articles</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Articles</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-controller="Articles" asp-action="All">All</a>
+                                <a class="dropdown-item" asp-controller="Articles" asp-action="All" asp-route-category="football">Football</a>
+                                <a class="dropdown-item" asp-controller="Articles" asp-action="All" asp-route-category="tennis">Tennis</a>
+                            </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                TODO: Fixture/leagues dropdown
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Fixtures</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-controller="Fixtures" asp-action="Index" asp-route-league="39">Premier League</a>
+                                <a class="dropdown-item" asp-controller="Fixtures" asp-action="Index" asp-route-league="172">A grupa</a>
+                                <a class="dropdown-item" asp-controller="Fixtures" asp-action="Index" asp-route-league="61">Ligue 1</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Highlights" asp-action="Index">Highlights</a>
                         </li>
 
 
