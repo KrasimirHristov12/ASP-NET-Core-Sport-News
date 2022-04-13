@@ -1,0 +1,49 @@
+﻿<select name="ranking" id="ranking">
+    <option value="ATP">ATP</option>
+    <option value="WTA">WTA</option>
+</select>
+<div class="ranking-container"></div>
+<script>
+    async function getInfo(fetchUrl, apiHost, apiKey) {
+        let response = await fetch(fetchUrl, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": apiHost,
+                "x-rapidapi-key": apiKey
+            }
+        });
+        let info = await response.json();
+        return info
+    }
+
+</script>
+
+<script>
+
+    var rankingContainer = document.querySelector(".ranking-container");
+    var rankingSelect = document.querySelector("#ranking");
+    rankingSelect.addEventListener("change", async function (e) {
+
+        let response = await getInfo(`https://tennis-live-data.p.rapidapi.com/rankings/${e.target.value}`, "tennis-live-data.p.rapidapi.com", "fad38f7576msh239314bc28a19f2p114b83jsndf2235278d1e");
+        var rankingArr = Array.from(response.results.rankings);
+        rankingContainer.innerHTML = '';
+        for (var i = 0; i < 20; i++) {
+            
+            const currentPlayer = rankingArr[i];
+            let playerInfo = document.createElement("div");
+            playerInfo.classList.add("player-info");
+            playerInfo.setAttribute("data-bs-toggle", "tooltip");
+            playerInfo.setAttribute("data-bs-placement", "bottom");
+            playerInfo.setAttribute("title", `${currentPlayer.country}`);
+            playerInfo.innerHTML = `${i + 1}. ${currentPlayer.first_name} ${currentPlayer.last_name}`;
+            rankingContainer.appendChild(playerInfo);
+        }
+    })
+  
+
+
+    // tooltip on hover foreach player to display each player's information such as country and so on
+
+
+</script>
+
