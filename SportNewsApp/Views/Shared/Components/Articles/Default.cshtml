@@ -1,0 +1,5 @@
+﻿@model ICollection<AllArticlesViewModel>
+@foreach (var article in Model)
+{
+    <partial name="_ArticlePartial" for="@article" />
+}

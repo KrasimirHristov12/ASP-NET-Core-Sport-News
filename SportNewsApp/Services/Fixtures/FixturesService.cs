@@ -8,14 +8,21 @@
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using System.Collections.Generic;
+    using Microsoft.Extensions.Configuration;
+    using System;
 
     public class FixturesService : IFixturesService
     {
+        private readonly IConfiguration configuration;
+        public FixturesService(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
         public async Task<FixturesViewModel> GetAll(League league, int round)
         {
             string url = $"https://v3.football.api-sports.io/fixtures?league={(int)league}&season=2021&round=Regular Season - {round}";
             HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", "f56f03d92f3514a249a86652a12b9236");
+            httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", this.configuration["ApiKeys:Football"]);
             httpClient.DefaultRequestHeaders.Add("x-rapidapi-host", "v3.football.api-sports.io");
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var result = await httpClient.GetAsync(url);
@@ -42,11 +49,31 @@
 
         }
 
+        public async Task<FixturesViewModel> GetTeamByDate(League league, int teamId, DateTime from, DateTime to)
+        {
+            string fromFormatted = from.ToString("yyyy-MM-dd");
+            string toFormatted = to.ToString("yyyy-MM-dd");
+            int leagueId = (int)league;
+
+            string url = $"https://v3.football.api-sports.io/fixtures?league={leagueId}&season=2021&team={teamId}&from={fromFormatted}&to={toFormatted}";
+            HttpClient httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", this.configuration["ApiKeys:Football"]);
+            httpClient.DefaultRequestHeaders.Add("x-rapidapi-host", "v3.football.api-sports.io");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var result = await httpClient.GetAsync(url);
+
+            string json = await result.Content.ReadAsStringAsync();
+            var fixtures = JsonConvert.DeserializeObject<FixturesViewModel>(json);
+            return fixtures;
+
+        }
+
         public async Task<int> GetCurrentRound(League league)
         {
             string url = $"https://v3.football.api-sports.io/fixtures/rounds?league={(int)league}&season=2021&current=true";
             HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", "f56f03d92f3514a249a86652a12b9236");
+            httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", this.configuration["ApiKeys:Football"]);
             httpClient.DefaultRequestHeaders.Add("x-rapidapi-host", "v3.football.api-sports.io");
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var result = await httpClient.GetAsync(url);

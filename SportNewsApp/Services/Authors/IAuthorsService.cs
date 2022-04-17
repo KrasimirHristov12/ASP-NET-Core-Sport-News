@@ -12,6 +12,7 @@ namespace SportNewsApp.Services.Authors
         bool IsUserAuthor(string userId);
 
         int GetAuthorId(string userId);
+        bool DeleteAuthor(string userId);
 
 
     }

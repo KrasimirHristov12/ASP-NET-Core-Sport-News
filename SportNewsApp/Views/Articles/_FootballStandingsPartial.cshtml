@@ -1,4 +1,6 @@
-﻿<form>
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<form>
 
 
     <span>Standing</span>
@@ -17,14 +19,17 @@
             let leagueValue = e.target.value;
             if (leagueValue != "0") {
 
-                getInfo(`https://v3.football.api-sports.io/standings?league=${leagueValue}&season=2021`, "v3.football.api-sports.io", "f56f03d92f3514a249a86652a12b9236").then(data => {
+                getInfo(`https://v3.football.api-sports.io/standings?league=${leagueValue}&season=2021`, "v3.football.api-sports.io", "@Configuration["ApiKeys:Football"]").then(data => {
 
                     let ranking = Array.from(data.response[0].league.standings[0]);
+                    console.log(ranking);
                     for (var i = 0; i < ranking.length; i++)
                     {
-                        var teamSpan = document.createElement("span");
+                        var teamSpan = document.createElement("a");
                         let teamName = ranking[i].team.name;
+                        let teamId = ranking[i].team.id;
                         teamSpan.innerText = teamName;
+                        teamSpan.href = `/Teams/Information?leagueId=${leagueValue}&teamId=${teamId}`;
                         teamSpan.classList.add("team-name");
                         let teamLogoUrl = ranking[i].team.logo;
                         let teamDiv = document.createElement("div");

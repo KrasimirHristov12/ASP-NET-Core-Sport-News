@@ -1,0 +1,21 @@
+﻿@model StandingsViewModel
+@{
+    string leagueName = Model.Response.Select(r => r.League.Name).First();
+    string leagueLogoUrl = Model.Response.Select(r => r.League.Logo).First();
+    var teamNames = Model.Response.SelectMany(r => r.League.Standings).SelectMany(s => s);
+}
+<table>
+    <tr>
+        <th>Rank</th>
+        <th>Team</th>
+        <th>Points</th>
+    </tr>
+    @foreach (var item in teamNames)
+    {
+        <tr>
+            <td>@item.Rank</td>
+            <td><img class="team-logo" src="@item.Team.Logo" /><span>@item.Team.Name</span></td>
+            <td>@item.Points</td>
+        </tr>
+    }
+</table>

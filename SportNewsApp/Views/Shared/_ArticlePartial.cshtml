@@ -12,10 +12,10 @@
             <h5 class="card-title">@Model.Title</h5>
         </a>
             <a asp-controller="Articles" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-primary">View more...</a>
-            @if (action == "Yours")
+            @if (action == "Yours" || User.IsInRole("Admin"))
             {
                 <a asp-controller="Articles" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">Edit</a>
-                <a asp-controller="Articles" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+                <a asp-controller="Articles" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
             }
 
     </div>

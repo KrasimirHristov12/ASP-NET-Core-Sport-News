@@ -9,6 +9,7 @@
     using SportNewsApp.Services.Users;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
 
     public class ArticlesService : IArticlesService
     {
@@ -62,7 +63,6 @@
                 ImageUrl = article.ImageUrl,
                 AuthorId = authorId,
 
-
             };
             this.data.Articles.Add(dataArticle);
             this.data.SaveChanges();
@@ -113,16 +113,16 @@
                 )
                    .ToList();
         }
-        public bool DeleteArticle(string id,string userId)
+        public bool DeleteArticle(string id,ClaimsPrincipal user)
         {
             var article = data.Articles.FirstOrDefault(a => a.Id == id);
-            var authorId = authorsService.GetAuthorId(userId);
+            var authorId = authorsService.GetAuthorId(this.usersService.GetUserId(user));
             
             if (article == null)
             {
                 return false;
             }
-            if (article.AuthorId != authorId)
+            if (article.AuthorId != authorId && !this.usersService.IfUserAdmin(user))
             {
                 return false;
             }
@@ -134,7 +134,7 @@
 
         }
 
-        public int EditArticle(AddArticleInputModel article, string articleId, string userId)
+        public int EditArticle(AddArticleInputModel article, string articleId, ClaimsPrincipal user)
         {
             var articleData = this.data.Articles.Include(a => a.Category).FirstOrDefault(a => a.Id == articleId);
             int countEditedEntries = 0;
@@ -142,8 +142,8 @@
             {
                 return -1;
             }
-            int currentAuthorId = this.authorsService.GetAuthorId(userId);
-            if (!CheckIfArticleBelongsToAuthor(currentAuthorId,articleData.AuthorId))
+            int currentAuthorId = this.authorsService.GetAuthorId(this.usersService.GetUserId(user));
+            if (!CheckIfArticleBelongsToAuthor(currentAuthorId,articleData.AuthorId) && !this.usersService.IfUserAdmin(user))
             {
                 return -2;
             }
@@ -200,6 +200,19 @@
                 ImageUrl = a.ImageUrl
             })
                 .ToList();
+        }
+
+        public ICollection<AllArticlesViewModel> GetArticlesForTeam(string teamName)
+        {
+            var articles = this.data.Articles.Where(a => a.Title.ToLower().Contains(teamName.ToLower()) || a.Content.ToLower().Contains(teamName.ToLower()))
+                .Select(a => new AllArticlesViewModel
+                {
+                    Id = a.Id,
+                    ImageUrl = a.ImageUrl,
+                    Title = a.Title
+                })
+                .ToList();
+            return articles;
         }
     }
 }

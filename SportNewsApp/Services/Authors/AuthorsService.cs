@@ -38,5 +38,18 @@
                 .Select(a => a.Id)
                 .FirstOrDefault();
         }
+
+
+        public bool DeleteAuthor(string userId)
+        {
+            var author = this.data.Author.FirstOrDefault(a => a.UserId == userId);
+            if (author == null)
+            {
+                return false;
+            }
+            this.data.Author.Remove(author);
+            this.data.SaveChanges();
+            return true;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using SportNewsApp.Services.Authors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,13 @@ namespace SportNewsApp.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public async Task InvokeAsync(HttpContext httpContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager
+            , IAuthorsService authorsService)
         {
             await CreateRole("User", roleManager);
             await CreateRole("Author", roleManager);
             await CreateRole("Admin", roleManager);
-            await CreateAdminAccount("admin@admin.com", "admin123", userManager, signInManager);
+            await CreateAdminAccount("admin@admin.com", "admin123", userManager, signInManager,authorsService);
             await _next(httpContext);
         }
         private async Task CreateRole(string roleName, RoleManager<IdentityRole> roleManager)
@@ -38,7 +40,7 @@ namespace SportNewsApp.Middlewares
                 await roleManager.CreateAsync(role);
             }
         }
-        private async Task CreateAdminAccount(string email, string password, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        private async Task CreateAdminAccount(string email, string password, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IAuthorsService authorsService)
         {
             var adminUser = new IdentityUser()
             {
@@ -46,13 +48,19 @@ namespace SportNewsApp.Middlewares
                 UserName = email,
 
             };
-
             var result = await userManager.CreateAsync(adminUser, password);
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(adminUser, false);
-                var roleResult = await userManager.AddToRoleAsync(adminUser, "Admin");
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+                await userManager.AddToRoleAsync(adminUser, "Author");
+                authorsService.CreateAuthor(adminUser.Id, adminUser.UserName);
+                
             }
+            //authorsService.DeleteAuthor("791b64cb-4263-4759-a9c3-5409ef81c10d");
+            //var getAdminUser = await userManager.FindByEmailAsync("admin@admin.com");
+            //await userManager.DeleteAsync(getAdminUser);
+
         }
     }
 

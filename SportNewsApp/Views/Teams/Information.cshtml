@@ -1,0 +1,34 @@
+﻿@model TeamsViewModel
+@{ 
+    var team = Model.Response.Select(r => r.Team).First();
+    var teamStadium = Model.Response.Select(r => r.Venue).First();
+    int leagueId = (int)ViewData["leagueId"];
+    int teamId = (int)ViewData["teamId"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 border-right border-dark" style="font-size:20px;">
+            <div class="mb-5">
+                <img src="@team.Logo" /> @team.Name - @team.Country
+            </div>
+
+            <div class="mb-5">
+                <img width="100%" src="@teamStadium.Image" />
+            </div>
+            <div>
+                <div>Stadium: @teamStadium.Name</div>
+                <div>Capacity: @teamStadium.Capacity</div>
+                <div>City: @teamStadium.City</div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <vc:fixtures league-id="@leagueId" team-id="@teamId" from="@DateTime.UtcNow.AddMonths(-2)" to="@DateTime.UtcNow"></vc:fixtures>
+            <vc:standings league-id="@leagueId" season="DateTime.UtcNow.Year - 1"></vc:standings>
+        </div>
+    </div>
+
+</div>
+
+
+

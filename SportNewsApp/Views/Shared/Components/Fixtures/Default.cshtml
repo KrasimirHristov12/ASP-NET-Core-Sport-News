@@ -1,0 +1,21 @@
+﻿@model FixturesViewModel
+@{ 
+    var teams = Model.Response.Select(r => new 
+    {
+        r.Teams,
+        r.Goals
+    }).Select(x => new
+    {
+        HomeTeamName = x.Teams.Home.Name,
+        AwayTeamName = x.Teams.Away.Name,
+        HomeTeamLogo = x.Teams.Home.Logo,
+        AwayTeamLogo = x.Teams.Away.Logo,
+        HomeTeamGoals  = x.Goals.Home,
+        AwayTeamGoals = x.Goals.Away
+    });
+}
+@foreach (var t in teams)
+{
+<div>
+    <span class="team-name">@t.HomeTeamName</span> <img src="@t.HomeTeamLogo" class="team-logo" /> <span class="goals">@t.HomeTeamGoals - @t.AwayTeamGoals</span> <img src="@t.AwayTeamLogo" class="team-logo" /> <span class="team-name">@t.AwayTeamName</span>  </div>
+}

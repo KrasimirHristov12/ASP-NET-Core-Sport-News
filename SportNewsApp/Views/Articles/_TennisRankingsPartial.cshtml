@@ -1,4 +1,5 @@
-﻿<select name="ranking" id="ranking">
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<select name="ranking" id="ranking">
     <option value="ATP">ATP</option>
     <option value="WTA">WTA</option>
 </select>
@@ -24,11 +25,11 @@
     var rankingSelect = document.querySelector("#ranking");
     rankingSelect.addEventListener("change", async function (e) {
 
-        let response = await getInfo(`https://tennis-live-data.p.rapidapi.com/rankings/${e.target.value}`, "tennis-live-data.p.rapidapi.com", "fad38f7576msh239314bc28a19f2p114b83jsndf2235278d1e");
+        let response = await getInfo(`https://tennis-live-data.p.rapidapi.com/rankings/${e.target.value}`, "tennis-live-data.p.rapidapi.com", "@Configuration["ApiKeys:Tennis"]");
         var rankingArr = Array.from(response.results.rankings);
         rankingContainer.innerHTML = '';
         for (var i = 0; i < 20; i++) {
-            
+
             const currentPlayer = rankingArr[i];
             let playerInfo = document.createElement("div");
             playerInfo.classList.add("player-info");
@@ -39,7 +40,7 @@
             rankingContainer.appendChild(playerInfo);
         }
     })
-  
+
 
 
     // tooltip on hover foreach player to display each player's information such as country and so on

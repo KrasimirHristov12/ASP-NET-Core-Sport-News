@@ -9,7 +9,6 @@
     using SportNewsApp.Services.Users;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
 
     public class ArticlesController : Controller
     {
@@ -56,9 +55,11 @@
                 Articles = allArticles
             };
             return View(articles);
+
+            //Implement search articles which contains the team name
         }
 
-        [Authorize(Roles = "Author,Admin")]
+        [Authorize(Roles = "Author")]
         public IActionResult Add()
         {
             var addModel = new AddArticleInputModel
@@ -87,25 +88,25 @@
             {
                 return BadRequest();
             }
-            articlesService.AddArticle(article, authorId);
-            return RedirectToAction("All");
+            this.articlesService.AddArticle(article, authorId);
+            return RedirectToAction(nameof(Yours));
             
        }
         [Authorize(Roles = "Author")]
         public IActionResult Yours()
         {
-            var articles = articlesService.GetYours(this.usersService.GetUserId(User));
+            var articles = this.articlesService.GetYours(this.usersService.GetUserId(User));
             return View(articles);
         }
         [Authorize(Roles = "Author")]
         public IActionResult Delete(string id)
         {
-            bool result = articlesService.DeleteArticle(id, this.usersService.GetUserId(User));
-            if (!result)
+            bool result = articlesService.DeleteArticle(id, User);
+            if (!result && !this.usersService.IfUserAdmin(User))
             {
                 return Unauthorized();
             }
-            return RedirectToAction(nameof(Yours));
+            return RedirectToAction(!this.usersService.IfUserAdmin(User) ? nameof(Yours) : nameof(All));
         }
 
         [Authorize(Roles = "Author")]
@@ -118,28 +119,33 @@
             {
                 return NotFound();
             }
-            if (!this.articlesService.CheckIfArticleBelongsToAuthor(currentAuthorId,articleAuthorId))
+            if (!this.articlesService.CheckIfArticleBelongsToAuthor(currentAuthorId,articleAuthorId) && !usersService.IfUserAdmin(User))
             {
                 return Unauthorized();
             }
             return View(myArticle);
         }
-        [Authorize(Roles = "Author")]
+        [Authorize(Roles = "Author,Admin")]
         [HttpPost]
         public IActionResult Edit(string id,AddArticleInputModel article)
         {
             string userId = this.usersService.GetUserId(User);
             int authorId = this.authorsService.GetAuthorId(userId);
-            int result = this.articlesService.EditArticle(article, id, this.usersService.GetUserId(User));
-            if (result == -1)
+            int result = this.articlesService.EditArticle(article, id, User);
+            if (User.IsInRole("Author"))
             {
-                return NotFound();
+                if (result == -1)
+                {
+                    return NotFound();
+                }
+                else if (result == -2)
+                {
+                    return Unauthorized();
+                }
             }
-            else if (result == -2)
-            {
-                return Unauthorized();
-            }
-            return RedirectToAction(nameof(Yours));
+
+
+            return RedirectToAction(!this.usersService.IfUserAdmin(User) ? nameof(Yours) : nameof(All));
         }
 
 

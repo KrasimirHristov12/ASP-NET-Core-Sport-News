@@ -23,17 +23,24 @@
         }
     }
 
+    @if (Model.Articles.Count == 0)
+    {
+        <h1>There aren't any articles so far</h1>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
 
-    <div class="container">
-        <div class="row">
-
-            @foreach (var article in Model.Articles)
-            {
-                <partial name="_ArticlePartial" for="@article" />
+                @foreach (var article in Model.Articles)
+                {
+                    <partial name="_ArticlePartial" for="@article" />
 
 
 
-            }
+                }
+            </div>
         </div>
-    </div>
+    }
+
 </div>
