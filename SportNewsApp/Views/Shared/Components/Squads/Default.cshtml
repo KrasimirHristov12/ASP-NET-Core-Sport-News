@@ -1,0 +1,20 @@
+﻿@model SquadsViewModel
+@{ 
+    var teamInfo = Model.Response.Select(r => r.Team).First();
+    var teamPlayersInfo = Model.Response.SelectMany(r => r.Players);
+}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Position</th>
+    </tr>
+    @foreach (var player in teamPlayersInfo)
+    {
+        <tr>
+            <td>@player.Name</td>
+            <td>@player.Age</td>
+            <td>@player.Position</td>
+        </tr>
+    }
+</table>

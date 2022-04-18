@@ -21,10 +21,6 @@
             {
                 articles = this.articlesService.GetArticlesForTeam(teamName);
             }
-            else if (type == "articlePage")
-            {
-
-            }
             return View(articles);
         }
     }

@@ -2,7 +2,8 @@
 @{
     string leagueName = Model.Response.Select(r => r.League.Name).First();
     string leagueLogoUrl = Model.Response.Select(r => r.League.Logo).First();
-    var teamNames = Model.Response.SelectMany(r => r.League.Standings).SelectMany(s => s);
+    var teamInfo = Model.Response.SelectMany(r => r.League.Standings).SelectMany(s => s);
+    int teamId = (int)ViewData["teamId"];
 }
 <table>
     <tr>
@@ -10,12 +11,12 @@
         <th>Team</th>
         <th>Points</th>
     </tr>
-    @foreach (var item in teamNames)
+    @foreach (var info in teamInfo)
     {
-        <tr>
-            <td>@item.Rank</td>
-            <td><img class="team-logo" src="@item.Team.Logo" /><span>@item.Team.Name</span></td>
-            <td>@item.Points</td>
+        <tr class="@(info.Team.Id == teamId ? "bg-light" : "")">
+            <td>@info.Rank</td>
+            <td><img class="team-logo" src="@info.Team.Logo" /><span>@info.Team.Name</span></td>
+            <td>@info.Points</td>
         </tr>
     }
 </table>

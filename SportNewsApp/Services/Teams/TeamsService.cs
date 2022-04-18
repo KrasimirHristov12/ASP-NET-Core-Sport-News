@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
+    using SportNewsApp.Models.Squads;
     using SportNewsApp.Models.Teams;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -26,6 +27,19 @@
             string json = await result.Content.ReadAsStringAsync();
             var teamInfo = JsonConvert.DeserializeObject<TeamsViewModel>(json);
             return teamInfo;
+        }
+
+        public async Task<SquadsViewModel> GetTeamSquad(int teamId)
+        {
+            string url = $"https://v3.football.api-sports.io/players/squads?team={teamId}";
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("x-rapidapi-key", this.configuration["ApiKeys:Football"]);
+            httpClient.DefaultRequestHeaders.Add("x-rapidapi-host", "v3.football.api-sports.io");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var result = await httpClient.GetAsync(url);
+            string json = await result.Content.ReadAsStringAsync();
+            var squadInfo = JsonConvert.DeserializeObject<SquadsViewModel>(json);
+            return squadInfo;
         }
     }
 }

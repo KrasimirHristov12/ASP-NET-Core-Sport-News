@@ -22,9 +22,16 @@
                 <div>City: @teamStadium.City</div>
             </div>
         </div>
-        <div class="col-md-5">
-            <vc:fixtures league-id="@leagueId" team-id="@teamId" from="@DateTime.UtcNow.AddMonths(-2)" to="@DateTime.UtcNow"></vc:fixtures>
-            <vc:standings league-id="@leagueId" season="DateTime.UtcNow.Year - 1"></vc:standings>
+        <div class="col-md-5 d-flex">
+            <div class="row">
+                <div class="col-md-8">
+                    <vc:fixtures league-id="@leagueId" team-id="@teamId" from="@DateTime.UtcNow.AddMonths(-2)" to="@DateTime.UtcNow"></vc:fixtures>
+                    <vc:standings league-id="@leagueId" season="DateTime.UtcNow.Year - 1"></vc:standings>
+                </div>
+                <div class="col-md-4">
+                    <vc:squads team-id="@teamId"></vc:squads>
+                </div>
+            </div>
         </div>
     </div>
 

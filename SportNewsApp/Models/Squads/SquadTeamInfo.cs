@@ -1,6 +1,6 @@
-﻿namespace SportNewsApp.Models.Standings
+﻿namespace SportNewsApp.Models.Squads
 {
-    public class StandingTeamInfo
+    public class SquadTeamInfo
     {
         public int Id { get; set; }
         public string Name { get; set; }
