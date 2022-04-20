@@ -1,6 +1,7 @@
 ﻿namespace SportNewsApp.Data.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using static DataConstants;
 
@@ -10,6 +11,7 @@
         {
             Id = Guid.NewGuid().ToString();
             CreatedOn = DateTime.UtcNow;
+            Comments = new HashSet<Comment>();
         }
         public string Id { get; set; }
         [Required]
@@ -25,6 +27,7 @@
         public Author Author { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
 
     }

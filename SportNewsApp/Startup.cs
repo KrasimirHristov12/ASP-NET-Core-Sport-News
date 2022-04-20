@@ -12,6 +12,7 @@ namespace SportNewsApp
     using SportNewsApp.Services.Articles;
     using SportNewsApp.Services.Authors;
     using SportNewsApp.Services.Categories;
+    using SportNewsApp.Services.Comments;
     using SportNewsApp.Services.Fixtures;
     using SportNewsApp.Services.Standings;
     using SportNewsApp.Services.Teams;
@@ -52,6 +53,7 @@ namespace SportNewsApp
             services.AddTransient<IFixturesService, FixturesService>();
             services.AddTransient<ITeamsService, TeamsService>();
             services.AddTransient<IStandingsService, StandingsService>();
+            services.AddTransient<ICommentsService, CommentsService>();
 
         }
 

@@ -31,6 +31,7 @@
             return data.Articles.Where(a => a.Id == id)
                 .Select(a => new ArticleViewModel
                 {
+                    ArticleId = a.Id,
                     Title = a.Title,
                     Content = a.Content,
                     CategoryName = a.Category.Name,

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportNewsApp.Data;
 
-namespace SportNewsApp.Data.Migrations
+namespace SportNewsApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220319200156_AddTableArticles")]
-    partial class AddTableArticles
+    [Migration("20220418144358_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -295,6 +295,40 @@ namespace SportNewsApp.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("SportNewsApp.Data.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ArticleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("MainCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("MainCommentId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -363,6 +397,28 @@ namespace SportNewsApp.Data.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("SportNewsApp.Data.Models.Comment", b =>
+                {
+                    b.HasOne("SportNewsApp.Data.Models.Article", "Article")
+                        .WithMany("Comments")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SportNewsApp.Data.Models.Comment", "MainComment")
+                        .WithMany()
+                        .HasForeignKey("MainCommentId");
+
+                    b.Navigation("Article");
+
+                    b.Navigation("MainComment");
+                });
+
+            modelBuilder.Entity("SportNewsApp.Data.Models.Article", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("SportNewsApp.Data.Models.Author", b =>

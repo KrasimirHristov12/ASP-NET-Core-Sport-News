@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore.Identity;
     using System.Linq;
     using System.Security.Claims;
+    using System.Threading.Tasks;
+
     public class UsersService : IUsersService
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -17,6 +19,12 @@
         public string GetUsername(ClaimsPrincipal user)
         {
             return user.Identity.Name;
+        }
+
+        public async Task<string> GetUsernameByUserId(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            return user.UserName;
         }
 
         public bool IfUserAdmin(ClaimsPrincipal user)

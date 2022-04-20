@@ -1,0 +1,63 @@
+﻿@model CommentsViewModel
+
+
+<h3>Comments: @Model.Comments.Count</h3>
+
+@foreach (var comment in Model.Comments.Where(c => c.MainCommentId == null))
+{
+<div class="comment" data-comment-id="@comment.Id">
+    <h5>@comment.AuthorUsername - @comment.CreatedOn.ToString("d")</h5>
+    <span>@comment.Content</span>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <button class="reply-btn">Reply</button>
+    }
+    @foreach (var subComment in Model.Comments.Where(c => c.MainCommentId == comment.Id))
+    {
+        <div class="sub-comment ml-3">
+            <h5>@comment.AuthorUsername - @comment.CreatedOn.ToString("d")</h5>
+            <span>@subComment.Content</span>
+        </div>
+    }
+
+
+
+</div>
+
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post" class="comment-form d-inline" action="/Comments/Add/@Model.ArticleId">
+<label>Content</label>
+
+<input type="text" name="content">
+
+<input type="submit" value="Submit your comment" />
+
+</form>
+
+
+<script>
+    let replyBtns = document.querySelectorAll(".reply-btn");
+    let commentForm = document.querySelector(".comment-form").cloneNode(true);
+        let commentDiv = document.querySelector(".comment");
+
+        replyBtns.forEach(b => b.addEventListener("click", function (e) {
+            let clickedReply = e.target;
+            let specificComment = clickedReply.parentNode;
+            let specificCommentId = specificComment.getAttribute("data-comment-id");
+            if (commentForm.action.includes("mainCommentId=")) {
+                commentForm.action = commentForm.action.slice(0, specificCommentId.length * (-1)) + specificCommentId;
+            }
+            else {
+                commentForm.action += `?mainCommentId=${specificCommentId}`;
+            }
+            
+            
+            // we should remove the mainCommentId parameter if already in the link.
+
+            clickedReply.after(commentForm);
+        }))
+
+    </script>
+}
