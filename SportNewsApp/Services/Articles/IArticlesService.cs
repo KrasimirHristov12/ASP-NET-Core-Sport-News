@@ -19,6 +19,7 @@
         bool CheckIfArticleBelongsToAuthor(int currentAuthorId, int actualAuthorId);
         int GetAuthorId(string id);
         ICollection<AllArticlesViewModel> GetArticlesForTeam(string teamName);
+        int GetTodayArticlesCount();
 
 
 

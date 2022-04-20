@@ -36,7 +36,7 @@
 
             return View(article);
         }
-        public IActionResult All(string category)
+        public IActionResult All(string category, int? page)
         {
             ICollection<AllArticlesViewModel> allArticles = null;
            
@@ -52,7 +52,8 @@
             {
                 Category = category != null ? category.ToLower() : null,
                 AllCategories = this.categoriesService.GetAll().Select(c => c.ToLower()).ToList(),
-                Articles = allArticles
+                Articles = allArticles,
+                CurrentPage = page
             };
             return View(articles);
 

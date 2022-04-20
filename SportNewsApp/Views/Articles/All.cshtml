@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = Model.Category == null ? "All articles" : $"{Model.Category} articles";
+    int articlesPerPage = 4;
+    int? currentPage = Model.CurrentPage;
+    double allPages = Model.Articles.Count / (double)articlesPerPage <= 1 ? 1 : Model.Articles.Count / (double)articlesPerPage;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -32,7 +35,7 @@
         <div class="container">
             <div class="row">
 
-                @foreach (var article in Model.Articles)
+                @foreach (var article in Model.Articles.Skip(((currentPage - 1) * articlesPerPage ?? 0)).Take(articlesPerPage))
                 {
                     <partial name="_ArticlePartial" for="@article" />
 
@@ -41,6 +44,13 @@
                 }
             </div>
         </div>
+
     }
 
+</div>
+<div class="pages">
+    @for (int i = 1; i <= Math.Ceiling(allPages); i++)
+    {
+        <a asp-controller="Articles" asp-action="All" asp-route-page="@i" asp-route-category="@(Model.Category ?? "")">@i</a>
+    }
 </div>

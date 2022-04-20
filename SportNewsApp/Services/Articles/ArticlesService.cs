@@ -1,6 +1,7 @@
 ﻿namespace SportNewsApp.Services.Articles
 {
     using Microsoft.EntityFrameworkCore;
+    using System;
     using SportNewsApp.Data;
     using SportNewsApp.Data.Models;
     using SportNewsApp.Models.Articles;
@@ -214,6 +215,11 @@
                 })
                 .ToList();
             return articles;
+        }
+
+        public int GetTodayArticlesCount()
+        { 
+            return this.data.Articles.Where(a => a.CreatedOn == DateTime.Today).Count();
         }
     }
 }

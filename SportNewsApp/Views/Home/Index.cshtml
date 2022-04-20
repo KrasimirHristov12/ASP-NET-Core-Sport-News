@@ -24,24 +24,15 @@ else
     <div class="carousel-inner">
         @for (int i = 0; i < articlesList.Count; i++)
         {
-            if (i == 0)
-            {
-                <div class="carousel-item active">
+           
+            
+                <div class="carousel-item @(i == 0 ? "active" : "")">
                     <img src="@articlesList[i].ImageUrl" class="d-block w-100" alt="@articlesList[i].Title">
                     <div class="carousel-caption d-none d-md-block">
                         <h5><a class="text-white" asp-controller="Articles" asp-action="Index" asp-route-id="@articlesList[i].Id">@articlesList[i].Title</a></h5>
                     </div>
                 </div>
-            }
-            else
-            {
-                <div class="carousel-item">
-                    <img src="@articlesList[i].ImageUrl" class="d-block w-100" alt="@articlesList[i].Title">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5><a class="text-white" asp-controller="Articles" asp-action="Index" asp-route-id="@articlesList[i].Id">@articlesList[i].Title</a></h5>
-                    </div>
-                </div>
-            }
+            
         }
 
         </div>
@@ -54,4 +45,12 @@ else
             <span class="sr-only">Next</span>
         </button>
     </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <vc:articles></vc:articles>
+        </div>
+    </div>
+    
+
+
 }

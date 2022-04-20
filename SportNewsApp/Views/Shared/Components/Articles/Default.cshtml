@@ -1,5 +1,2 @@
-﻿@model ICollection<AllArticlesViewModel>
-@foreach (var article in Model)
-{
-    <partial name="_ArticlePartial" for="@article" />
-}
+﻿@model int
+<div class="today-articles-count border border-dark"><h4>New Articles Today: @Model</h4></div>

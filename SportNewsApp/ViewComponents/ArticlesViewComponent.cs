@@ -14,14 +14,10 @@
         {
             this.articlesService = articles;
         }
-        public async Task<IViewComponentResult> InvokeAsync(string type, string teamName = null)
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            ICollection<AllArticlesViewModel> articles = null;
-            if (type == "team")
-            {
-                articles = this.articlesService.GetArticlesForTeam(teamName);
-            }
-            return View(articles);
+            int todaysCount = this.articlesService.GetTodayArticlesCount();
+            return View(todaysCount);
         }
     }
 }
